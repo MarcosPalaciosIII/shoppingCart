@@ -1,64 +1,57 @@
-//import java.util.ArrayList;
+import java.util.ArrayList;
 //import java.util.List;
 
 public class User {
 
-    String name;
-    ShoppingCart[] list;
-
-    private int itemsInArray = 0;
-    private double totalPriceOfItems = 0;
+    private String name;
+    private ArrayList<ShoppingCartItem> shoppingCart;
 
 
     public User(String name) {
-
         this.name = name;
-        this.list = new ShoppingCart[10];
-
+        this.shoppingCart = new ArrayList<ShoppingCartItem>(10);
     }
 
     public void addToCart(String name, double cost) {
-        if (this.itemsInArray == 10) {
+        if (this.shoppingCart.size() == 10) {
             System.out.println("You have reached the max allowed items for your shopping cart.");
         } else {
-            this.list[this.itemsInArray] = new ShoppingCart(name, cost);
-            this.itemsInArray += 1;
+            ShoppingCartItem item = new ShoppingCartItem(name, cost, 1);
+            this.shoppingCart.add(item);
         }
-
     }
 
     public void removeFromCart(int index) {
-//        this.list.remove(index);
-        this.list[index] = null;
-        this.itemsInArray -= 1;
+        this.shoppingCart.remove(index);
     }
 
-    public void showCartItems() {
-
-        for(int i = 0; i < this.list.length; i++) {
-            if(this.list[i] == null) {
-                continue;
+    public ArrayList<ShoppingCartItem> showCartItems() {
+        ArrayList<ShoppingCartItem> validItems = new ArrayList<>();
+        for(int i = 0; i < this.shoppingCart.size(); i++) {
+            if(this.shoppingCart.get(i) != null) {
+                String itemName = this.shoppingCart.get(i).getName();
+                double price = this.shoppingCart.get(i).getPrice();
+                System.out.println("Item: " + itemName + " Price: " + price + ".");
+                validItems.add(new ShoppingCartItem(itemName, price, 1));
             }
-            System.out.println(this.list[i].item);
         }
-
+        return validItems;
     }
 
     public double calculateCartTotal() {
-        this.totalPriceOfItems = 0;
-        for(int i = 0; i <= this.itemsInArray; i++) {
-            if(this.list[i] == null) continue;
-            this.totalPriceOfItems += this.list[i].price;
+        int totalPriceOfItems = 0;
+        for(int i = 0; i < this.shoppingCart.size(); i++) {
+            if(this.shoppingCart.get(i) == null) continue;
+            totalPriceOfItems += this.shoppingCart.get(i).getPrice();
         }
-        System.out.println("this is the cost of all the items: $" + this.totalPriceOfItems);
+        System.out.println("this is the cost of all the items: $" + totalPriceOfItems);
 
-        return this.totalPriceOfItems;
+        return totalPriceOfItems;
     }
 
     public double cartTotalPlusTax(int taxRate) {
-        calculateCartTotal();
-        System.out.println("Total plus tax: $" + Math.round(this.totalPriceOfItems * ((taxRate * 0.01) + 1.00) * 100) * 0.01);
-        return (this.totalPriceOfItems * Math.round(this.totalPriceOfItems * ((taxRate * 0.01) + 1.00) * 100) * 0.01);
+        double totalPrice = this.calculateCartTotal();
+        System.out.println("Total plus tax: $" + Math.round(totalPrice * ((taxRate * 0.01) + 1.00) * 100) * 0.01);
+        return (totalPrice * Math.round(totalPrice * ((taxRate * 0.01) + 1.00) * 100) * 0.01);
     }
-
 }

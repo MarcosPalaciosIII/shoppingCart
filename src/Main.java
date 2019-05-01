@@ -10,8 +10,6 @@ public class Main {
 
         john.showCartItems();
 
-        System.out.println(john.list.length);
-
         john.removeFromCart(2);
         System.out.println("removed item from list");
 
